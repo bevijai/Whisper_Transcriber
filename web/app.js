@@ -80,16 +80,20 @@
       </div>
     `;
 
-    // populate language controls according to rules
+    // populate language controls according to rules (do not display fixed-language text)
     const langControls = document.getElementById('mode-lang-controls');
     if(mode === 'en_en'){
-      langControls.innerHTML = '<div><label>Language</label><div>English (fixed)</div></div>';
+      // no language selects shown for fixed English->English
+      langControls.innerHTML = '';
     } else if(mode === 'lang_lang'){
-      langControls.innerHTML = '<div><label>Source</label><select id="modeSrc"></select></div><div style="margin-top:.5rem"><label>Target</label><div>Same as source (fixed)</div></div>';
+      // only source select; target will be same as source implicitly
+      langControls.innerHTML = '<div><label>Source</label><select id="modeSrc"></select></div>';
     } else if(mode === 'en_to_lang'){
-      langControls.innerHTML = '<div><label>Source</label><div>English (fixed)</div></div><div style="margin-top:.5rem"><label>Target</label><select id="modeTgt"></select></div>';
+      // only target select; source is English implicitly
+      langControls.innerHTML = '<div><label>Target</label><select id="modeTgt"></select></div>';
     } else if(mode === 'lang_to_en'){
-      langControls.innerHTML = '<div><label>Source</label><select id="modeSrc"></select></div><div style="margin-top:.5rem"><label>Target</label><div>English (fixed)</div></div>';
+      // only source select; target is English implicitly
+      langControls.innerHTML = '<div><label>Source</label><select id="modeSrc"></select></div>';
     }
 
     // rehydrate model select inside mode page
