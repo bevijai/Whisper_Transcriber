@@ -47,7 +47,16 @@ app.add_middleware(
 # Serve the simple web UI from ./web at the repo root
 web_dir = os.path.join(os.path.dirname(__file__), "web")
 if os.path.isdir(web_dir):
-    app.mount("/", StaticFiles(directory=web_dir, html=True), name="web")
+    # Mount static files under /static to avoid intercepting API routes
+    app.mount("/static", StaticFiles(directory=web_dir), name="static")
+
+    # Serve the index at root
+    @app.get("/", response_class=FileResponse)
+    def _index():
+        index_path = os.path.join(web_dir, "index.html")
+        if os.path.exists(index_path):
+            return FileResponse(index_path, media_type="text/html")
+        return JSONResponse({"detail": "No UI available"}, status_code=404)
 
 # simple model cache to allow loading different models on demand
 _MODEL_CACHE: Dict[str, object] = {}
