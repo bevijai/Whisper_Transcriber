@@ -13,6 +13,7 @@ By default the `MODEL_NAME` environment variable controls which model is preload
 """
 from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.responses import JSONResponse, FileResponse
+from fastapi import Query
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 import os
@@ -61,6 +62,14 @@ if os.path.isdir(web_dir):
 # simple model cache to allow loading different models on demand
 _MODEL_CACHE: Dict[str, object] = {}
 
+@app.get("/languages")
+def _languages():
+    try:
+        from whisper.tokenizer import LANGUAGES
+
+        return JSONResponse(LANGUAGES)
+    except Exception:
+        return JSONResponse({}, status_code=200)
 
 def get_model(name: str = None):
     """Load or return cached Whisper model."""
@@ -83,6 +92,9 @@ def startup_event():
     default = os.environ.get("MODEL_NAME", "tiny")
     try:
         get_model(default)
+    mode: str = Query("en_en"),
+    src: str = Query("auto"),
+    tgt: str = Query("en"),
         print(f"Preloaded model: {default}")
     except Exception as e:
         print(f"Warning: failed to preload model {default}: {e}")

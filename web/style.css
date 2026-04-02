@@ -1,0 +1,30 @@
+:root{
+  --bg:#0f1724; --card:#0b1220; --muted:#9aa4b2; --accent:#6ee7b7; --accent-2:#60a5fa; --glass: rgba(255,255,255,0.03);
+}
+*{box-sizing:border-box}
+body{font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:linear-gradient(180deg,#071021 0%,#0b1220 100%);color:#e6eef6;margin:0;padding:2rem}
+.container{max-width:1100px;margin:0 auto;padding:1.5rem;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:12px;box-shadow:0 8px 40px rgba(2,6,23,0.6)}
+.header h1{margin:0;font-size:1.25rem}
+.lead{color:var(--muted);margin-top:.25rem}
+.brand{display:flex;gap:1rem;align-items:center}
+.brand img{width:64px;height:64px;object-fit:contain;border-radius:8px;background:linear-gradient(90deg,var(--accent),var(--accent-2));padding:8px}
+.brand-text h1{margin:0;font-size:1.2rem}
+.row{display:flex;gap:1rem;align-items:center;margin-top:1rem}
+.label{display:block;color:var(--muted);font-size:0.85rem}
+.col{flex:1}
+select,input[type=file]{background:var(--glass);border:1px solid rgba(255,255,255,0.04);color:var(--muted);padding:.5rem .6rem;border-radius:8px}
+.btn{border:0;padding:.6rem .9rem;border-radius:10px;cursor:pointer;font-weight:600}
+.btn.primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#022;box-shadow:0 6px 18px rgba(96,165,250,0.12)}
+.btn.secondary{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--accent)}
+.btn.small{padding:.4rem .6rem;font-size:.9rem}
+.actions{margin-top:1.2rem}
+.status{margin-top:.75rem;color:var(--muted)}
+.result{margin-top:1.25rem}
+textarea#transcript{width:100%;min-height:160px;border-radius:10px;padding:1rem;background:#021024;border:1px solid rgba(255,255,255,0.03);color:#e6eef6}
+.result-actions{margin-top:.6rem}
+.footer{margin-top:1.25rem;color:var(--muted);font-size:.85rem}
+/* premium touches */
+.container{border:1px solid rgba(255,255,255,0.03)}
+.label+.hint{display:block;color:var(--muted);font-size:0.8rem;margin-top:0.25rem}
+/* small responsive */
+@media (max-width:640px){.row{flex-direction:column;align-items:stretch}}

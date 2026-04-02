@@ -7,6 +7,9 @@
   const copyBtn = document.getElementById('copyBtn');
   const downloadBtn = document.getElementById('downloadBtn');
   const modelSelect = document.getElementById('modelSelect');
+  const modeSelect = document.getElementById('modeSelect');
+  const srcLangSelect = document.getElementById('srcLangSelect');
+  const tgtLangSelect = document.getElementById('tgtLangSelect');
 
   let mediaRecorder = null;
   let recordedBlobs = [];
@@ -41,6 +44,26 @@
     if(!recording) startRecording(); else stopRecording();
   });
 
+  // populate language lists from server
+  async function loadLanguages(){
+    try{
+      const resp = await fetch('/languages');
+      if(!resp.ok) return;
+      const langs = await resp.json();
+      // clear selects (keep 'auto' in src and 'en' in tgt)
+      srcLangSelect.querySelectorAll('option:not([value="auto"])').forEach(n=>n.remove());
+      tgtLangSelect.querySelectorAll('option:not([value="en"])').forEach(n=>n.remove());
+      Object.entries(langs).forEach(([code,name])=>{
+        const o1 = document.createElement('option'); o1.value = code; o1.textContent = `${name} (${code})`;
+        const o2 = document.createElement('option'); o2.value = code; o2.textContent = `${name} (${code})`;
+        srcLangSelect.appendChild(o1);
+        tgtLangSelect.appendChild(o2);
+      });
+    }catch(e){ console.warn('Failed to load languages', e); }
+  }
+
+  loadLanguages();
+
   async function doTranscribe(){
     setStatus('Preparing audio...');
     let file = null;
@@ -52,13 +75,24 @@
     if(!file){ setStatus('No audio to transcribe'); return; }
 
     const model = modelSelect.value || 'tiny';
+    const mode = modeSelect.value || 'en_en';
+    const src = srcLangSelect.value || 'auto';
+    const tgt = tgtLangSelect.value || 'en';
+
     const fd = new FormData();
     fd.append('file', file, 'upload.webm');
+
+    // build query params
+    const params = new URLSearchParams();
+    params.set('model', model);
+    params.set('mode', mode);
+    params.set('src', src);
+    params.set('tgt', tgt);
 
     setStatus('Uploading and transcribing...');
     transcriptEl.value = '';
     try{
-      const resp = await fetch(`/transcribe?model=${encodeURIComponent(model)}`, { method:'POST', body: fd });
+      const resp = await fetch(`/transcribe?${params.toString()}`, { method:'POST', body: fd });
       if(!resp.ok){ const txt = await resp.text(); throw new Error(txt || resp.status); }
       const j = await resp.json();
       transcriptEl.value = j.text || '';

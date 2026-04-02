@@ -1,47 +1,90 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Whisper Local</title>
-  <style>
-    body { font-family: Arial, sans-serif; max-width: 720px; margin: 3rem auto; padding: 0 1rem; }
-    h1 { font-size: 1.6rem }
-    input[type=file] { display:block; margin: 1rem 0 }
-    button { padding: 0.5rem 1rem }
-    pre { background:#f6f6f6; padding:1rem }
-  </style>
-</head>
-<body>
-  <h1>Whisper Local — Transcribe</h1>
-  <p>Select an audio file and press <em>Transcribe</em>. This sends the file to the local server.</p>
-  <input id="file" type="file" accept="audio/*" />
-  <div>
-    <button id="btn">Transcribe</button>
-  </div>
-  <h2>Result</h2>
-  <pre id="result">No transcription yet.</pre>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Whisper Local — Transcriber</title>
+    <link rel="stylesheet" href="/static/style.css">
+  </head>
+  <body>
+    <main class="container">
+      <header class="header">
+        <div class="brand">
+          <img id="edzyLogo" src="https://raw.githubusercontent.com/bevijai/theedzy/main/web/assets/logo.png" alt="Edzy" />
+          <div class="brand-text">
+            <h1>Edzy — Whisper Transcriber</h1>
+            <p class="lead">Record or upload audio, transcribe or translate with studio-quality results.</p>
+          </div>
+        </div>
+      </header>
 
-<script>
-const btn = document.getElementById('btn');
-const fileInput = document.getElementById('file');
-const result = document.getElementById('result');
+      <section class="controls">
+        <div class="row">
+          <div class="col">
+            <label class="label">Model</label>
+            <select id="modelSelect">
+              <option value="tiny">tiny</option>
+              <option value="base">base</option>
+              <option value="small">small</option>
+              <option value="medium">medium</option>
+              <option value="large">large</option>
+            </select>
+          </div>
 
-btn.addEventListener('click', async () => {
-  const f = fileInput.files[0];
-  if (!f) { alert('Choose a file'); return; }
-  const fd = new FormData();
-  fd.append('file', f);
-  result.textContent = 'Uploading...';
-  try {
-    const resp = await fetch('/transcribe?model=tiny', { method: 'POST', body: fd });
-    if (!resp.ok) throw new Error('Server returned ' + resp.status);
-    const j = await resp.json();
-    result.textContent = JSON.stringify(j, null, 2);
-  } catch (err) {
-    result.textContent = 'Error: ' + err.message;
-  }
-});
-</script>
-</body>
+          <div class="col">
+            <label class="label">Mode</label>
+            <select id="modeSelect">
+              <option value="en_en">Transcribe (English → English)</option>
+              <option value="lang_lang">Transcribe (Same language)</option>
+              <option value="en_to_lang">Translate (English → Other)</option>
+              <option value="lang_to_en">Translate (Other → English)</option>
+            </select>
+          </div>
+
+          <div class="col">
+            <label class="label">Source</label>
+            <select id="srcLangSelect">
+              <option value="auto">Detect language</option>
+            </select>
+          </div>
+
+          <div class="col">
+            <label class="label">Target</label>
+            <select id="tgtLangSelect">
+              <option value="en">English</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label class="label">Audio</label>
+            <input id="fileInput" type="file" accept="audio/*" />
+          </div>
+        </div>
+
+        <div class="row actions">
+          <button id="recordBtn" class="btn secondary">Start Recording</button>
+          <button id="transcribeBtn" class="btn primary">Transcribe</button>
+        </div>
+
+        <div id="status" class="status">Idle</div>
+      </section>
+
+      <section class="result">
+        <h2>Transcription</h2>
+        <textarea id="transcript" readonly placeholder="Transcription will appear here..."></textarea>
+        <div class="row result-actions">
+          <button id="copyBtn" class="btn small">Copy</button>
+          <button id="downloadBtn" class="btn small">Download</button>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <small>Served from your local machine — data does not leave your host.</small>
+      </footer>
+    </main>
+
+    <script src="/static/app.js"></script>
+  </body>
 </html>
