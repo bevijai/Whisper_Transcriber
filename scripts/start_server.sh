@@ -26,8 +26,11 @@ fi
 # default model
 export MODEL_NAME=${MODEL_NAME:-tiny}
 
+HOST=${HOST:-127.0.0.1}
+PORT=${PORT:-8000}
+
 if [ -x ".venv/bin/python" ]; then
-  exec .venv/bin/python -m uvicorn server:app --host 127.0.0.1 --port 8000
+  exec .venv/bin/python -m uvicorn server:app --host "$HOST" --port "$PORT"
 else
-  exec uvicorn server:app --host 127.0.0.1 --port 8000
+  exec uvicorn server:app --host "$HOST" --port "$PORT"
 fi
