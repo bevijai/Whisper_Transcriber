@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Whisper Local</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 720px; margin: 3rem auto; padding: 0 1rem; }
+    h1 { font-size: 1.6rem }
+    input[type=file] { display:block; margin: 1rem 0 }
+    button { padding: 0.5rem 1rem }
+    pre { background:#f6f6f6; padding:1rem }
+  </style>
+</head>
+<body>
+  <h1>Whisper Local — Transcribe</h1>
+  <p>Select an audio file and press <em>Transcribe</em>. This sends the file to the local server.</p>
+  <input id="file" type="file" accept="audio/*" />
+  <div>
+    <button id="btn">Transcribe</button>
+  </div>
+  <h2>Result</h2>
+  <pre id="result">No transcription yet.</pre>
+
+<script>
+const btn = document.getElementById('btn');
+const fileInput = document.getElementById('file');
+const result = document.getElementById('result');
+
+btn.addEventListener('click', async () => {
+  const f = fileInput.files[0];
+  if (!f) { alert('Choose a file'); return; }
+  const fd = new FormData();
+  fd.append('file', f);
+  result.textContent = 'Uploading...';
+  try {
+    const resp = await fetch('/transcribe?model=tiny', { method: 'POST', body: fd });
+    if (!resp.ok) throw new Error('Server returned ' + resp.status);
+    const j = await resp.json();
+    result.textContent = JSON.stringify(j, null, 2);
+  } catch (err) {
+    result.textContent = 'Error: ' + err.message;
+  }
+});
+</script>
+</body>
+</html>
