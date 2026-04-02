@@ -18,6 +18,16 @@ body{font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;back
 .brand:hover .logo.default{transform:translateY(-3px) scale(1.03);opacity:0;transition:opacity .18s ease, transform .18s ease}
 .brand:hover .logo.hover{transform:translateY(-3px) scale(1.03);opacity:1;transition:opacity .18s ease, transform .18s ease}
 .brand:hover .brand-text h1{color:var(--accent-2)}
+
+/* Modes grid (card-style) */
+.modes-grid{display:flex;gap:1rem;flex-wrap:wrap}
+.mode-card{flex:1 1 160px;background:linear-gradient(180deg,rgba(255,255,255,0.015),rgba(255,255,255,0.01));border-radius:14px;padding:1rem;cursor:pointer;box-shadow:0 8px 28px rgba(2,6,23,0.45);border:1px solid rgba(255,255,255,0.03);transition:transform .18s ease, box-shadow .18s ease, border-color .12s ease}
+.mode-card:focus{outline:none;box-shadow:0 10px 32px rgba(96,165,250,0.12);transform:translateY(-4px)}
+.mode-card:hover{transform:translateY(-6px);border-color:rgba(96,165,250,0.08)}
+.mode-card.selected{border-color:rgba(110,231,183,0.28);box-shadow:0 12px 36px rgba(96,165,250,0.12);transform:translateY(-6px)}
+.mode-icon{font-size:28px;margin-bottom:8px}
+.mode-title{font-weight:700;margin-bottom:6px}
+.mode-desc{color:var(--muted);font-size:0.9rem}
 .row{display:flex;gap:1rem;align-items:center;margin-top:1rem}
 .label{display:block;color:var(--muted);font-size:0.85rem}
 .col{flex:1}

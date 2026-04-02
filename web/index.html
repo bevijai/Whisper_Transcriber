@@ -36,12 +36,28 @@
 
           <div class="col">
             <label class="label">Mode</label>
-            <select id="modeSelect">
-              <option value="en_en">Transcribe (English → English)</option>
-              <option value="lang_lang">Transcribe (Same language)</option>
-              <option value="en_to_lang">Translate (English → Other)</option>
-              <option value="lang_to_en">Translate (Other → English)</option>
-            </select>
+            <div class="modes-grid" role="list">
+              <div class="mode-card" data-mode="en_en" role="listitem" tabindex="0">
+                <div class="mode-icon">📝</div>
+                <div class="mode-title">English → English</div>
+                <div class="mode-desc">Transcribe speech in English to English text.</div>
+              </div>
+              <div class="mode-card" data-mode="lang_lang" role="listitem" tabindex="0">
+                <div class="mode-icon">🌐</div>
+                <div class="mode-title">Same Language</div>
+                <div class="mode-desc">Transcribe speech in any language to the same language.</div>
+              </div>
+              <div class="mode-card" data-mode="en_to_lang" role="listitem" tabindex="0">
+                <div class="mode-icon">🔁</div>
+                <div class="mode-title">English → Other</div>
+                <div class="mode-desc">Translate English speech into a selected language.</div>
+              </div>
+              <div class="mode-card" data-mode="lang_to_en" role="listitem" tabindex="0">
+                <div class="mode-icon">➡️</div>
+                <div class="mode-title">Other → English</div>
+                <div class="mode-desc">Translate speech in another language to English.</div>
+              </div>
+            </div>
           </div>
 
           <div class="col">

@@ -7,7 +7,25 @@
   const copyBtn = document.getElementById('copyBtn');
   const downloadBtn = document.getElementById('downloadBtn');
   const modelSelect = document.getElementById('modelSelect');
-  const modeSelect = document.getElementById('modeSelect');
+  // mode cards
+  const modeCards = document.querySelectorAll('.mode-card');
+  let selectedMode = 'en_en';
+
+  function setSelectedMode(mode){
+    selectedMode = mode;
+    modeCards.forEach(c=>{
+      if(c.dataset.mode === mode) c.classList.add('selected'); else c.classList.remove('selected');
+    });
+  }
+
+  // wire card clicks and keyboard activation
+  modeCards.forEach(card=>{
+    card.addEventListener('click', ()=> setSelectedMode(card.dataset.mode));
+    card.addEventListener('keydown', (e)=>{ if(e.key==='Enter'||e.key===' ') { e.preventDefault(); setSelectedMode(card.dataset.mode); } });
+  });
+
+  // default select first card if present
+  if(modeCards.length>0) setSelectedMode(modeCards[0].dataset.mode);
   const srcLangSelect = document.getElementById('srcLangSelect');
   const tgtLangSelect = document.getElementById('tgtLangSelect');
 
@@ -75,7 +93,7 @@
     if(!file){ setStatus('No audio to transcribe'); return; }
 
     const model = modelSelect.value || 'tiny';
-    const mode = modeSelect.value || 'en_en';
+    const mode = (typeof selectedMode !== 'undefined' && selectedMode) ? selectedMode : 'en_en';
     const src = srcLangSelect.value || 'auto';
     const tgt = tgtLangSelect.value || 'en';
 
