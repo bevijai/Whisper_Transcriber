@@ -92,16 +92,19 @@ def startup_event():
     default = os.environ.get("MODEL_NAME", "tiny")
     try:
         get_model(default)
-    mode: str = Query("en_en"),
-    src: str = Query("auto"),
-    tgt: str = Query("en"),
         print(f"Preloaded model: {default}")
     except Exception as e:
         print(f"Warning: failed to preload model {default}: {e}")
 
 
 @app.post("/transcribe")
-async def transcribe(file: UploadFile = File(...), model: str = None):
+async def transcribe(
+    file: UploadFile = File(...),
+    model: str = None,
+    mode: str = Query("en_en"),
+    src: str = Query("auto"),
+    tgt: str = Query("en"),
+):
     """Transcribe an uploaded audio file.
 
     - `file`: multipart file upload
@@ -117,11 +120,29 @@ async def transcribe(file: UploadFile = File(...), model: str = None):
 
     try:
         m = get_model(model)
+        # map UI modes to whisper decode options
+        decode_options = {}
+
+        if mode == "en_en":
+            decode_options["task"] = "transcribe"
+            decode_options["language"] = "en"
+        elif mode == "lang_lang":
+            decode_options["task"] = "transcribe"
+            if src != "auto":
+                decode_options["language"] = src
+        elif mode == "en_to_lang":
+            decode_options["task"] = "translate"
+            decode_options["language"] = tgt
+        elif mode == "lang_to_en":
+            decode_options["task"] = "translate"
+            if src != "auto":
+                decode_options["language"] = src
+
         t0 = time.time()
-        result = m.transcribe(tmp_path)
+        result = m.transcribe(tmp_path, **decode_options)
         took = time.time() - t0
         text = result.get("text", "")
-        return JSONResponse({"text": text, "seconds": took})
+        return JSONResponse({"text": text, "seconds": took, "mode": mode})
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     finally:
