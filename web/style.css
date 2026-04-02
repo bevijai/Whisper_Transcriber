@@ -7,12 +7,16 @@ body{font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;back
 .header h1{margin:0;font-size:1.25rem}
 .lead{color:var(--muted);margin-top:.25rem}
 .brand{display:flex;gap:1rem;align-items:center}
-.brand img{width:64px;height:64px;object-fit:contain;border-radius:8px;background:linear-gradient(90deg,var(--accent),var(--accent-2));padding:8px}
+.logo-wrap{position:relative;width:64px;height:64px}
+.logo{position:absolute;inset:0;width:64px;height:64px;object-fit:contain;border-radius:12px;padding:8px;display:block}
+.logo.default{opacity:1}
+.logo.hover{opacity:0}
 .brand-text h1{margin:0;font-size:1.2rem}
 .brand{cursor:pointer}
 .brand img{transition:transform .18s ease, filter .18s ease, box-shadow .18s ease}
 .brand-text h1{transition:color .18s ease}
-.brand:hover img{transform:translateY(-3px) scale(1.03);filter:hue-rotate(-10deg) saturate(1.2) brightness(1.02);box-shadow:0 8px 30px rgba(96,165,250,0.12)}
+.brand:hover .logo.default{transform:translateY(-3px) scale(1.03);opacity:0;transition:opacity .18s ease, transform .18s ease}
+.brand:hover .logo.hover{transform:translateY(-3px) scale(1.03);opacity:1;transition:opacity .18s ease, transform .18s ease}
 .brand:hover .brand-text h1{color:var(--accent-2)}
 .row{display:flex;gap:1rem;align-items:center;margin-top:1rem}
 .label{display:block;color:var(--muted);font-size:0.85rem}
