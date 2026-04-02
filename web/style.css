@@ -21,8 +21,8 @@ body{font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;back
 
 /* Modes grid (card-style) */
 /* 2x2 square grid for mode cards: two columns, two rows on desktop */
-.modes-grid{display:grid;grid-template-columns:repeat(2,minmax(220px,1fr));gap:1rem;align-items:start;justify-items:stretch}
-.mode-card{background:linear-gradient(180deg,rgba(255,255,255,0.015),rgba(255,255,255,0.01));border-radius:14px;padding:1rem;cursor:pointer;box-shadow:0 8px 28px rgba(2,6,23,0.45);border:1px solid rgba(255,255,255,0.03);transition:transform .18s ease, box-shadow .18s ease, border-color .12s ease;display:flex;flex-direction:column;justify-content:flex-start;aspect-ratio:1 / 1}
+.modes-grid{display:grid;grid-template-columns:repeat(2,minmax(260px,1fr));gap:1.5rem;align-items:stretch;justify-items:stretch;max-width:980px;margin:0 auto}
+.mode-card{background:linear-gradient(180deg,rgba(255,255,255,0.012),rgba(255,255,255,0.008));border-radius:16px;padding:1.25rem;cursor:pointer;box-shadow:0 12px 40px rgba(2,6,23,0.5);border:1px solid rgba(255,255,255,0.03);transition:transform .18s ease, box-shadow .18s ease, border-color .12s ease;display:flex;flex-direction:column;justify-content:flex-start;aspect-ratio:1 / 1}
 .mode-card:focus{outline:none;box-shadow:0 10px 32px rgba(96,165,250,0.12);transform:translateY(-4px)}
 .mode-card:hover{transform:translateY(-6px);border-color:rgba(96,165,250,0.08)}
 .mode-card.selected{border-color:rgba(110,231,183,0.28);box-shadow:0 12px 36px rgba(96,165,250,0.12);transform:translateY(-6px)}

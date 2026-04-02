@@ -163,9 +163,6 @@
     mCopyBtn.addEventListener('click', async ()=>{ try{ await navigator.clipboard.writeText(mTranscript.value); setMStatus('Copied'); }catch(e){ setMStatus('Copy failed'); } });
     mDownloadBtn.addEventListener('click', ()=>{ const blob=new Blob([mTranscript.value||''],{type:'text/plain;charset=utf-8'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='transcript.txt'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url); setMStatus('Downloaded'); });
   }
-  const srcLangSelect = document.getElementById('srcLangSelect');
-  const tgtLangSelect = document.getElementById('tgtLangSelect');
-
   let mediaRecorder = null;
   let recordedBlobs = [];
   let recording = false;
@@ -199,25 +196,7 @@
     if(!recording) startRecording(); else stopRecording();
   });
 
-  // populate language lists from server
-  async function loadLanguages(){
-    try{
-      const resp = await fetch('/languages');
-      if(!resp.ok) return;
-      const langs = await resp.json();
-      // clear selects (keep 'auto' in src and 'en' in tgt)
-      srcLangSelect.querySelectorAll('option:not([value="auto"])').forEach(n=>n.remove());
-      tgtLangSelect.querySelectorAll('option:not([value="en"])').forEach(n=>n.remove());
-      Object.entries(langs).forEach(([code,name])=>{
-        const o1 = document.createElement('option'); o1.value = code; o1.textContent = `${name} (${code})`;
-        const o2 = document.createElement('option'); o2.value = code; o2.textContent = `${name} (${code})`;
-        srcLangSelect.appendChild(o1);
-        tgtLangSelect.appendChild(o2);
-      });
-    }catch(e){ console.warn('Failed to load languages', e); }
-  }
-
-  loadLanguages();
+  // main page no longer shows global source/target selects; mode-specific pages populate their own selects
 
   async function doTranscribe(){
     setStatus('Preparing audio...');
@@ -231,8 +210,27 @@
 
     const model = modelSelect.value || 'tiny';
     const mode = (typeof selectedMode !== 'undefined' && selectedMode) ? selectedMode : 'en_en';
-    const src = srcLangSelect.value || 'auto';
-    const tgt = tgtLangSelect.value || 'en';
+    // derive src/tgt from any existing main-page selects, otherwise use sensible defaults per mode
+    const srcEl = document.getElementById('srcLangSelect');
+    const tgtEl = document.getElementById('tgtLangSelect');
+    let src = srcEl ? srcEl.value : null;
+    let tgt = tgtEl ? tgtEl.value : null;
+
+    if(!src){
+      if(mode === 'en_en') src = 'en';
+      else if(mode === 'lang_lang') src = 'auto';
+      else if(mode === 'en_to_lang') src = 'en';
+      else if(mode === 'lang_to_en') src = 'auto';
+      else src = 'auto';
+    }
+
+    if(!tgt){
+      if(mode === 'en_en') tgt = 'en';
+      else if(mode === 'lang_lang') tgt = src;
+      else if(mode === 'en_to_lang') tgt = 'en';
+      else if(mode === 'lang_to_en') tgt = 'en';
+      else tgt = 'en';
+    }
 
     const fd = new FormData();
     fd.append('file', file, 'upload.webm');
